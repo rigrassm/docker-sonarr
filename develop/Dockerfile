@@ -7,11 +7,15 @@ RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selectio
   && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys FDA5DFFC \
   && echo "deb http://apt.sonarr.tv/ develop main" | tee -a /etc/apt/sources.list \
   && apt-get update -q \
-  && apt-get install -qy nzbdrone mediainfo \
+  && apt-get install -qy mediainfo wget \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-RUN chown -R nobody:users /opt/NzbDrone \
+RUN cd /opt && wget http://update.sonarr.tv/v2/master/mono/NzbDrone.master.tar.gz
+
+RUN tar xvf NzbDrone.master.tar.gz && mv NzbDrone sonarr
+
+RUN chown -R nobody:users /opt/sonarr \
   ; mkdir -p /volumes/config/sonarr /volumes/completed /volumes/media \
   && chown -R nobody:users /volumes
 
